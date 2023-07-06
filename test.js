@@ -1,7 +1,12 @@
 const should = require('should')
-const request = require('supertest');
+const redis = require('redis')
+const request = require('supertest')
+
 
 const app = require('./homework3')
+
+const client = redis.createClient()
+
 
 describe('API测试', () => {
     describe('GET /start', () => {
@@ -9,7 +14,8 @@ describe('API测试', () => {
 
             request(app)
                 .get('/start')
-                .expect(200)
+
+            .expect(200)
                 .end((err, res) => {
 
                     should.not.exist(err)
@@ -21,10 +27,11 @@ describe('API测试', () => {
 
     describe('GET /:number', () => {
         it('当number<R时，smaller', (done) => {
-
+            client.set('R', 50)
 
             request(app)
-                .get('/25')
+
+            .get('/25')
                 .expect(200)
                 .end((err, res) => {
                     should.not.exist(err)
