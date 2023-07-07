@@ -6,7 +6,7 @@ const { promisify } = require('util')
 const app = require('./homework3')
 
 const client = redis.createClient()
-const getAsync = promisify(client.get).bind(client)
+
 
 describe('API测试', () => {
 
