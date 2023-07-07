@@ -8,8 +8,7 @@ const client = redis.createClient()
 
 //生成随机数R并保存
 app.get('/start', (req, res) => {
-    const randomNumber = 50 //将值定为50，为单元测试提供准确判断
-        //Math.floor(Math.random() * 101)
+    const randomNumber = Math.floor(Math.random() * 101)
     client.set('R', randomNumber)
     res.send('OK')
 });
@@ -31,7 +30,7 @@ app.get('/:number', (req, res) => {
                 res.send('bigger')
             } else {
                 res.send('equal')
-                const newR = 50 //Math.floor(Math.random() * 101)
+                const newR = Math.floor(Math.random() * 101)
                 client.set('R', newR)
 
             }
