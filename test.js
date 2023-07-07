@@ -27,17 +27,18 @@ describe('API测试', () => {
 
     describe('GET /:number', () => {
         it('当number<R时，smaller', (done) => {
-            client.set('R', 50)
 
+            before(
+                client.set('R', 50)
+            ).then(done)
             request(app)
-
-            .get('/25')
+                .get('/25')
                 .expect(200)
                 .end((err, res) => {
                     should.not.exist(err)
                     res.text.should.equal('smaller')
                     done();
-                });
+                })
         });
 
         it('当number>R时，bigger', (done) => {
