@@ -24,11 +24,10 @@ describe('API测试', () => {
     });
 
     describe('GET /:number', () => {
+        before(async() => {
+            await client.set('R', 50)
+        });
         it('当number<R时，smaller', async() => {
-            before(
-                client.set('R', 50)
-            )
-
             const res = await request(app).get('/25').expect(200)
             res.text.should.equal('smaller')
         });
