@@ -8,15 +8,13 @@ const client = redis.createClient()
 app.use(express.static(path.join(__dirname, 'public')))
 
 //生成随机数R并保存
-function callback() {
-    const R = Math.floor(Math.random() * 101)
-    client.set('R', R)
-}
 
 app.get('/start', (req, res) => {
-
-    callback(res.send('OK'))
-
+    const R = Math.floor(Math.random() * 101)
+    client.set('R', () => {
+        R,
+        res.send('OK')
+    })
 });
 
 //比较number和R的值
@@ -35,11 +33,9 @@ app.get('/:number', (req, res) => {
             } else if (number > R) {
                 res.send('bigger')
             } else {
-                callback(res.send('equal'))
-
-
-
-
+                res.send('equal')
+                const newR = Math.floor(Math.random() * 101)
+                client.set('R', newR)
             }
         }
     });
