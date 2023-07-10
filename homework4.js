@@ -11,8 +11,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/start', (req, res) => {
     const R = Math.floor(Math.random() * 101)
-    client.set('R', () => {
-        R,
+    client.set('R', R, () => {
         res.send('OK')
     })
 });
@@ -33,9 +32,11 @@ app.get('/:number', (req, res) => {
             } else if (number > R) {
                 res.send('bigger')
             } else {
-                res.send('equal')
+
                 const newR = Math.floor(Math.random() * 101)
-                client.set('R', newR)
+                client.set('R', newR, () => {
+                    res.send('equal')
+                })
             }
         }
     });
