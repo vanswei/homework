@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Guess the Number</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <body>
+        <h1> Number Guesser</h1>
+        <div>
+            <table>
+                <tr>
+                    <td><button id="restart">Restart</button></td>
+                    <td><input type="number" id="number" placeholder="Guess a number"></td>
+                    <td><button id="submit">Submit</button></td>
+                </tr>
+                <td><span id="result"></span></td>
+            </table>
+        </div>
+    </body>
+    <script>
+        $(document).ready(function() {
+            $('#restart').click(function() {
+                //获取和显示strat的返回值
+                $.get('/start', function(data) {
+                    $('#result').text('OK')
+                });
+            });
+
+            $('#submit').click(function() {
+                //获取输入的数字
+                var number = $('#number').val()
+                    //获取显示输入数字对应的返回值
+                $.get('/' + number, function(data) {
+                    $('#result').text(data)
+                });
+            });
+        });
+    </script>
+</head>
+
+</html>
