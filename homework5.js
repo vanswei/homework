@@ -74,13 +74,8 @@ function makeGuessCallback(min, max, callback) {
                 console.log('模拟玩一次猜数字游戏(callback方式)找到的答案:', number)
                 callback(null)
             } else if (body === 'smaller') {
-
-                console.log(body, number)
                 makeGuessCallback(number + 1, max, callback)
-
             } else if (body === 'bigger', callback) {
-
-                console.log(body, number)
                 makeGuessCallback(min, number - 1, callback)
             }
         }
@@ -112,10 +107,8 @@ function makeGuessPromise(min, max) {
             if (result === 'equal') {
                 console.log('模拟玩一次猜数字游戏(Promise方式)所找到的答案:', number)
             } else if (result === 'smaller') {
-                console.log(result, number)
                 return makeGuessPromise(number + 1, max)
             } else if (result === 'bigger') {
-                console.log(result, number)
                 return makeGuessPromise(min, number - 1)
             }
         })
@@ -144,10 +137,8 @@ async function makeGuessAsync(min, max) {
         if (response === 'equal') {
             console.log('模拟玩一次猜数字游戏(async/await方式)所找到的答案:', number)
         } else if (response === 'smaller') {
-            console.log(response, number)
             await makeGuessAsync(number + 1, max)
         } else if (response === 'bigger') {
-            console.log(response, number)
             await makeGuessAsync(min, number - 1)
         }
 
