@@ -1,6 +1,5 @@
 const express = require('express')
 const redis = require('redis')
-const requestPromise = require('request-promise')
 const request = require('request-promise')
 const app = express()
 const client = redis.createClient()
@@ -95,7 +94,7 @@ playGameCallback((err, result) => {
 
 // 模拟玩一次猜数字游戏（Promise方式）
 function playGamePromise() {
-    return requestPromise('http://localhost:3000/start')
+    return request('http://localhost:3000/start')
         .then(() => {
             return makeGuessPromise(0, 1000000)
         })
@@ -109,7 +108,7 @@ function playGamePromise() {
 
 function makeGuessPromise(min, max) {
     const number = Math.floor((min + max) / 2)
-    return requestPromise(`http://localhost:3000/${number}`)
+    return request(`http://localhost:3000/${number}`)
         .then((result) => {
             if (result === 'equal') {
                 return number
