@@ -60,6 +60,7 @@ function playGameCallback(callback) {
         } else {
             console.log(body)
             makeGuessCallback(0, 1000000, callback)
+
         }
     });
 }
@@ -67,24 +68,27 @@ function playGameCallback(callback) {
 function makeGuessCallback(min, max, callback) {
     const number = Math.floor((min + max) / 2)
     request(`http://localhost:3000/${number}`, (err, res, body) => {
+
         if (err) {
             callback(err)
         } else {
             if (body === 'equal') {
-                console.log('模拟玩一次猜数字游戏(callback方式)找到的答案:', number)
-                callback(null)
+                callback(null, number)
             } else if (body === 'smaller') {
                 makeGuessCallback(number + 1, max, callback)
             } else if (body === 'bigger', callback) {
                 makeGuessCallback(min, number - 1, callback)
             }
         }
+
     });
 }
 
-playGameCallback((err) => {
+playGameCallback((err, result) => {
     if (err) {
         console.error(err)
+    } else {
+        console.log(`模拟玩一次猜数字游戏(callbcak方式)所找到的答案: ${result}`)
     }
 })
 
@@ -94,6 +98,9 @@ function playGamePromise() {
     return requestPromise('http://localhost:3000/start')
         .then(() => {
             return makeGuessPromise(0, 1000000)
+        })
+        .then((answer) => {
+            console.log('模拟玩一次猜数字游戏(promise方式)所找到的答案:', answer)
         })
         .catch((err) => {
             console.error(err)
@@ -105,46 +112,39 @@ function makeGuessPromise(min, max) {
     return requestPromise(`http://localhost:3000/${number}`)
         .then((result) => {
             if (result === 'equal') {
-                console.log('模拟玩一次猜数字游戏(Promise方式)所找到的答案:', number)
+                return number
             } else if (result === 'smaller') {
                 return makeGuessPromise(number + 1, max)
             } else if (result === 'bigger') {
                 return makeGuessPromise(min, number - 1)
             }
         })
-        .catch((err) => {
-            console.error(err)
-        });
 }
 
 playGamePromise()
-
 
 // 模拟玩一次猜数字游戏（async/await方式）
 async function playGameAsync() {
     try {
         await request('http://localhost:3000/start')
-        await makeGuessAsync(0, 1000000)
+        const answer = await makeGuessAsync(0, 1000000)
+        console.log('模拟玩一次猜数字游戏(async/await方式)所找到的答案:', answer)
     } catch (err) {
         console.error(err)
     }
 }
 
 async function makeGuessAsync(min, max) {
-    try {
-        const number = Math.floor((min + max) / 2)
-        const response = await request(`http://localhost:3000/${number}`)
-        if (response === 'equal') {
-            console.log('模拟玩一次猜数字游戏(async/await方式)所找到的答案:', number)
-        } else if (response === 'smaller') {
-            await makeGuessAsync(number + 1, max)
-        } else if (response === 'bigger') {
-            await makeGuessAsync(min, number - 1)
-        }
-
-    } catch (err) {
-        console.error(err)
+    const number = Math.floor((min + max) / 2)
+    const response = await request(`http://localhost:3000/${number}`)
+    if (response === 'equal') {
+        return number
+    } else if (response === 'smaller') {
+        return await makeGuessAsync(number + 1, max)
+    } else if (response === 'bigger') {
+        return await makeGuessAsync(min, number - 1)
     }
 }
+
 
 playGameAsync()
