@@ -7,6 +7,9 @@ const md5 = require('md5')
 const path = require('path')
 const User = require('./userModel')
 const Number = require('./numberModel')
+const Joi = require('joi')
+
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -82,7 +85,7 @@ const authMiddleware = (req, res, next) => {
     if (!req.session.userid) {
         return res.status(401).json({ message: '未登录用户' })
     }
-    next();
+    next()
 }
 
 
@@ -96,7 +99,7 @@ app.get('/start', authMiddleware, async(req, res) => {
 
         await number.save()
 
-        res.json({ message: '随机数已生成' })
+        res.status(200).json({ message: '随机数已生成' })
     } catch (error) {
         console.error('生成随机数时出错：', error)
         res.status(500).json({ message: '服务器错误' })
@@ -104,9 +107,17 @@ app.get('/start', authMiddleware, async(req, res) => {
 })
 
 
+const numberSchema = Joi.object({
+    number: Joi.number().required()
+})
 
 app.get('/number/:number', authMiddleware, async(req, res) => {
     const { number } = req.params
+    const { error } = numberSchema.validate(req.params)
+    if (error) {
+        res.status(400).json({ message: '随机数为空' })
+        return
+    }
     try {
         const userNumber = await Number.findOne({ userid: req.session.userid })
 
@@ -125,6 +136,6 @@ app.get('/number/:number', authMiddleware, async(req, res) => {
 })
 
 
-app.listen(4000, () => {
+module.exports = app.listen(4000, () => {
     console.log('服务器运行在 http://localhost:4000')
 })
